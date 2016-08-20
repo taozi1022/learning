@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>信息管理</title>
+	 <style>
+        td {
+            text-align: center;
+        }
+    </style>
+    <script>
+        //在页面加载完成的时候，把下面这个数据动态添加到表格中
+        var data = [
+            {
+                'id' : 1,
+                'username' : 'LEO',
+                'age' : 36,
+                'sex' : '男'
+            },
+            {
+                'id' : 2,
+                'username' : 'MOMO',
+                'age' : 16,
+                'sex' : '男'
+            },
+            {
+                'id' : 3,
+                'username' : 'DUODUO',
+                'age' : 29,
+                'sex' : '男'
+            },
+            {
+                'id' : 4,
+                'username' : '勇升',
+                'age' : 46,
+                'sex' : '男'
+            },
+            {
+                'id' : 5,
+                'username' : '小美',
+                'age' : 46,
+                'sex' : '女'
+            }
+        ];
+
+        /*document.ondblclick = function() {
+            alert(1);
+        }*/
+
+        /*
+            1、根据数据生成表格。
+            2、数据的添加
+            3、全选
+            4、上移下移删除
+            5、排序（按年龄从大到小-从小到大）
+            6、批量删除（被选中的删除）
+        */
+    </script>
+    <script type="text/javascript" src="tools.js" ></script>
+</head>
+<body>
+
+<form action="" name="form">
+    <p>
+        姓名:<input type="text" id="text" name="username"/>
+    </p>
+    <p>
+        年龄:<input type="text" id='ages' name="age"/>
+    </p>
+    <p>
+        性别: <select name="sex" id="sexs">
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+    </p>
+    <p>
+        <input type="button" value="添加" id="add" name="add"/>
+    </p>
+</form>
+<input type="button" value="批量删除"  id="delectCheckAll" /> 
+<input type="button" value="年龄从大到小"  id="ageSort" /> 
+<table id="tab1" width="100%" border="1">
+    <thead>
+    <tr>
+        <th>
+            <input id="checkAll" type="checkbox" /> 全选
+        </th>
+        <th>ID</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>性别</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+
+    <tbody>
+       <!--<tr>
+            <td>
+                <input type="checkbox"/>
+            </td>
+            <td>1</td>
+            <td>LEO</td>
+            <td>36</td>
+            <td>男</td>
+            <td>
+                <a href="javascript:;">上移</a> |
+                <a href="javascript:;">下移</a> |
+                <a href="javascript:;">删除</a>
+            </td>
+        </tr>-->
+    </tbody>
+</table>
+</body>
+<script>
+/////////////////////获取元素模块///////////////////
+   
+var tbody = tab1.tBodies[0];  		//tbody
+var checkAll  =$("#checkAll");		//全选
+var checkBoxs = $("input",tbody);   //单选
+var num = 0;						//记录 checkBoxs的长度
+var add  =$("#add");				//添加数据和页面结构
+var userName  =$("#text");				//添加数据和页面结构
+var age  =$("#ages");				//添加数据和页面结构
+var sex  =$("#sexs");				//添加数据和页面结构
+var _id  = data.length;				//添加数据和页面结构
+var delectCheckAll = $('#delectCheckAll');   
+var ageSort = $('#ageSort');   
+
+   
+
+/////////////////////////1. 根据数据生成结构/////////////////////
+//循环data数据,
+for(var i = 0; i < data.length; i++){
+	//封装1-1生成页面的函数renderData()
+	//声明变量来存data[i]的tr内容/////将data[i]项传进去
+	var newTR = renderData(data[i]);
+	//在获取元素模块将tbody获取到
+	//将newTRappend到tbody中
+	tbody.appendChild(newTR);				//////到这里,页面数据就渲染出来了
+	//每append进来一个tr,就要给这个tr下的  deleteBtn  添加一个点击事件处理,
+	//每append进来一个tr,就要给这个tr下的  checkBox  添加一个点击事件处理,
+	//封装1-2给删除按钮添加点击事件处理的函数    onTrClick()
+	onTrClick(newTR);
+}
+  
+  
+////////////////////2. 全选////////////////////////////////////
+//在获取元素模块获取到checkAll和tbody下的所有的checkbox
+//店家全选按钮时,将页面中多有的checkboxs的checked为checkAll的状态
+checkAll.onclick = function(){
+	for(var i = 0; i < checkBoxs.length; i++){
+		checkBoxs[i].checked = this.checked;
+		//10.. 全选的时候也要设置勾选状态
+        data[i].checked = this.checked; 
+	}
+}
+  
+  
+///////3. 封装的whoSelect()函数,判断谁为选中状态///////返回值是一个数组/////// 
+  
+//////////4. 点击添加按钮,添加输入框的信息,并添加数据的信息//////// 
+//在获取元素模块获取到  add userName age sex  并且声明一个_id
+add.onclick = function(){
+	//获取到userName age sex 的value值
+	var nameT = userName.value.trim();
+	var agrT = age.value.trim();
+	var sexT = sex.value.trim();
+	//nameT   agrT 的内容不能为空,条件成立,弹框提醒
+	if( nameT === "" ){
+        alert("姓名不能为空");
+        return;
+    }  
+    if( agrT === "" ){
+        alert("年龄不能为空");
+        return;
+    }
+    //声明一个对象,用来渲染当前这个对象的页面结构
+    var newObj = {
+    	'id' : ++_id,
+        'username' : nameT,
+        'age' : agrT,
+        'sex' : sexT
+    }
+    //将add进来的push到数据中
+    data.push(newObj);
+    
+    //////////////7--2//判断是否排过序//////////
+    if(!ageSort.isClick){
+    	//没有排过序,直接append数据
+    	 var newTR = renderData(newObj);
+		//将newTRappend到tbody中
+		tbody.appendChild(newTR);				//////到这里,页面数据就渲染出来了
+		//每append进来一个tr,就要给这个tr下的  deleteBtn  添加一个点击事件处理,
+		//每append进来一个tr,就要给这个tr下的  checkBox  添加一个点击事件处理,
+		//调用onTrClick()函数
+		onTrClick(newTR);
+    }else{
+    	//排过序,按照排序的顺序来
+    	if(ageSort.onOff){
+			//小到大
+			data.sort(function(a,b){
+				return a.age - b.age;
+			})
+		}else{
+			//大到小
+			data.sort(function(a,b){
+				return b.age - a.age;
+			})
+		}
+		//排完序重新渲染页面数据
+		tbody.innerHTML = '';
+		for(var i = 0; i < data.length; i++){
+			var newTR = renderData(data[i]);
+			tbody.appendChild(newTR);	
+			onTrClick(newTR);
+		}
+    }
+    userName.value = age.value = '';
+    //每添加进来一条数据,就将checkAll设置为不勾选状态
+    checkAll.checked = false;
+    checkAll.disabled = false;
+    ageSort.disabled = false;
+}
+  
+/////////////////////////5. 批量删除///////////////////////////  
+//在获取元素模块获取到 delectCheckAll 
+//在点击时,查看都有哪几个为选中状态,就要调用whoSelect()函数了,将这个函数返货的数组给了slected
+//循环这个slected数组,并且将数组中的元素的页面结构全部删除了
+delectCheckAll.onclick = function(){
+	var slected = whoSelect();
+	//如果页面中没有选中的,我就点批量删除的话,这个时候,slected数组中时没有元素存在的,所以要进行判断,弹框并打断程序
+	if(slected.length === 0){
+		alert("请选择要删除的内容");
+		return;
+	}
+	
+	for(var i = 0; i < slected.length; i++){
+		tbody.removeChild(slected[i]);
+	}
+	
+	/////9. 删除数据///////////
+	//遍历data
+	for(var i = 0; i < data.length; i++){
+		//遍历数组
+		for(var j = 0; j < slected.length; j++){
+			//获取到slected[j]项的dataset.userId
+			var userId = slected[j].dataset.userId;
+			//如果userId与data中的某项的id值相等的话,就将其数据删除掉,并且i--,防止删除不干净
+			if(data[i].id == userId){
+				data.splice(i,1);
+				i--;
+				break;
+			}
+		}
+	}
+	//移除完之后,判断页面中的checkBoxs的长度,如果长度为0,全选不勾选,并且不能点击
+	if(checkBoxs.length === 0){
+		checkAll.checked = false;
+		checkAll.disabled = true;
+		ageSort.disabled = true;
+	}
+}
+////////////////////6.  排序  /////////////////////////
+//点击排序时,按照年龄来排序
+//存在两种情况,大到小或者小到大所以,给ageSort自身加一个开关
+ageSort.onOff = true;
+ageSort.onclick = function(){
+	
+	//////////// 7--1////////////////
+	//当我添加数据的时候,用来判断是否已经排过序
+	ageSort.isClick = true;
+	
+	//true状态是从小到大,false时从大到小
+	if(!ageSort.onOff){
+		//小到大
+		data.sort(function(a,b){
+			return a.age - b.age;
+		})
+		this.value = '年龄从大到小';
+	}else{
+		//大到小
+		data.sort(function(a,b){
+			return b.age - a.age;
+		})
+		this.value = '年龄从小到大';
+	}
+	ageSort.onOff = !ageSort.onOff;
+	
+	
+	//排完序重新渲染页面数据
+	tbody.innerHTML = '';
+	
+	for(var i = 0; i < data.length; i++){
+		var newTR = renderData(data[i]);
+		//将newTRappend到tbody中
+		tbody.appendChild(newTR);				//////到这里,页面数据就渲染出来了
+		//每append进来一个tr,就要给这个tr下的  deleteBtn  添加一个点击事件处理,
+		//每append进来一个tr,就要给这个tr下的  checkBox  添加一个点击事件处理,
+		//调用onTrClick()函数
+		onTrClick(newTR);
+	}
+}
+  
+///////////////////7.  判断是否排过序///////////////////
+////在点击排序按钮时,给排序按钮加个标识  7--1
+///7--2///在添加数据中判断是否点过排序
+//	如果点过排序,则添加的数据按照排序的顺序来进行
+//  如果没有点击排序,就往append进来
+  
+
+//////////////8. 点击删除时,删除对应的数据//////////
+/////////8--1///给每条tr设置自定义属性
+ ////////8--2///点击删除按钮时将数据删除掉 
+ 
+ 
+ /////////9. 点击批量删除时,,删除对应的数据/////////
+ 
+  
+/////////10. 排序时,勾选的还是勾选的,不勾选的就是不勾选的
+//如果当前为选中的状态,就给当前对应的数据中添加一个key和value值
+  
+  
+ //////////////////1-1生成页面的函数///////////////////////
+function renderData(obj){		//obj接收的是data[i]
+    var tr = document.createElement("tr");
+    
+///////10 . ///给当前obj加checked的value值
+///////obj.checked 为true，那么input就被选中为false，就不选中
+ 	var checked = obj.checked ? "checked" : "";
+    
+	tr.innerHTML = '<td>'
+		+'<input '+checked+' type="checkbox"/>'
+		+'</td>'
+		+'<td>'+obj.id+'</td>'
+		+'<td>'+obj.username+'</td>'
+		+'<td>'+obj.age+'</td>'
+		+'<td>'+obj.sex+'</td>'
+		+'<td>'
+			+'<a  class="delectBtn"  href="javascript:;">删除</a>'
+		+'</td>';
+	
+	//8--1 给每个tr设置自定义属性,当我点击删除的时候,找到这个自定义属性,将对应的数据删除掉
+	tr.setAttribute("data-user-id",obj.id);
+    return tr;    
+}
+//////////////////封装1-2给   删除按钮和前面的选择框   添加点击事件处理的函数///////////
+ function onTrClick(tr){		//tr接收的是新创建的newTR元素
+ 	var deleteBtn = $('.delectBtn',tr)[0];
+ 	
+ 	//当点击deleteBtn时,获取到它父级的父级,早tbody下移除掉
+ 	deleteBtn.onclick = function(){
+ 		var parents = this.parentNode.parentNode;
+ 		tbody.removeChild(parents);
+ 		
+ 		///////8--2/////删除数据
+ 		//当点击这个杀出按钮时,获取到parents的dataset.userId
+ 		var userId = parents.dataset.userId;
+ 		//循环打他的每一项
+ 		for(var i = 0; i < data.length; i++){
+ 			//如果data[i].id与当前的userId相等,就将这项数据在打他中删除
+ 			if(data[i].id == userId){
+ 				data.splice(i,1);
+ 				break;
+ 			}
+ 		}	
+ 		//判断data的length是否===0,等于0说明页面中没有数据
+ 		//将全选按钮取消勾选
+ 		//全选和排序按钮不能点击
+ 		if(checkBoxs.length === 0){
+ 			checkAll.checked = false;
+ 			checkAll.disabled = true;
+ 			ageSort.disabled = true;
+ 		}
+ 	}
+ 	
+ 	var checkboxs = $('input',tr)[0];
+ 	//点击checkboxs时,
+ 	checkboxs.onclick = function(){
+ 		//判断一下当前点击的checked的值,如果当前点击的值为false的话,说明下面不是所有的都为勾选状态
+ 		//如果当前点击的checked为true,循环一下checkBoxs,看一下每一个的值,如果checkBoxs[i]个的checked为true,就让num++
+ 		if(this.checked){
+ 			
+ 			//因为这一块内容在后面还会继续用到,就封装一个函数,用来判断谁是选中状态,谁不是选中状态
+ 			//目的就是找到当前状态为选中的元素,将该元素的父级的父级push到arr数组中,就不需要num这个全局变量了,方便操作
+ 			//函数的名字为whoSelect()
+ 			
+ 			
+ 			//当num的值  等于   checkBoxs.length,说明下面的checkboxs都为勾选状态,那就需要将checkAll设置为勾选状态
+ 			//封装完函数就不需要再去判断num了,只需要判断arr.length,与 checkBoxs.length即可
+ 			if(whoSelect().length ===  checkBoxs.length){
+ 				checkAll.checked = this.checked;
+ 			}
+ 		}else{
+ 			checkAll.checked = this.checked;
+ 		}
+ 		//10..获取到当前点击的父级的父级身上的id值
+ 		var userId = this.parentNode.parentNode.dataset.userId;
+ 		
+ 		//////////10.//////////////
+ 		for( var i = 0; i < data.length; i++ ){
+            if( data[i].id == userId ){
+                data[i].checked = this.checked;
+                break;
+            }
+       }
+ 	}
+ }
+  
+////////////////////判断谁为选中状态/////////////////////////
+function whoSelect(){
+	var arr= [];
+	for(var i = 0; i < checkBoxs.length; i++){
+		if(checkBoxs[i].checked){
+			arr.push(checkBoxs[i].parentNode.parentNode);
+		}
+	}
+	return arr;
+}
+</script>
+</html>
