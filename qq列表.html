@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		body{
+			font: 20px/30px "宋体";
+		}
+		p{
+			margin: 0;
+			padding: 0 10px;
+			background: greenyellow;
+			border: 1px solid #000;
+		}
+		p:hover{
+			cursor: pointer;
+		}
+		ul{
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			display: none;
+		}
+		ul li{
+			padding-left: 20px;
+		}
+		#box{
+			margin: 20px auto;
+			width: 200px;
+			border: 2px solid #000;
+		}
+		.bg{
+			background: deepskyblue;
+		}
+		.li_bg{
+			background: blue;
+		}
+		#introduce{
+			text-indent: 2em;
+			max-width: 300px;
+			line-height: 30px;
+			font-size: 20px;
+			border: 2px solid deepskyblue;
+			padding: 10px;
+			background: pink;
+		}
+	</style>
+	<script>
+		window.onload = function(){
+			var box = document.getElementById("box");
+			var allDiv = box.querySelectorAll("div");
+			var allP = box.querySelectorAll("p");
+			var allUl = box.querySelectorAll("ul");
+			var all_li = box.querySelectorAll("li");
+
+			var cur = 0;
+			for( var i = 0; i < allP.length; i++){
+				allP[i].states = true;
+				allP[i].n = i;
+				allP[i].onclick = function(){
+					if(this.states){
+						//清空class
+						allP[cur].className = "";
+						all_li[cur2].className = "";
+						//
+						allP[cur].states = true;
+						//清空上一次的display
+						allUl[cur].style.display = "none";
+						//给当前的p添加class
+						this.className = "bg";
+						//显示列表
+						allUl[this.n].style.display = "block";
+						//给cur重新赋值
+						cur = this.n;
+						//改变它的判断条件
+						this.states = false;
+					}else{
+						this.className = "";
+						allUl[this.n].style.display = "none";
+						this.states = true;
+					}
+				}
+			}
+			var cur2 = 0;
+			for( var k = 0; k < all_li.length; k++ ){
+				//存下标
+				all_li[k].m = k;
+				all_li[k].states = true;
+				all_li[k].onclick = function(){
+					if(this.states){
+						//清空class/
+						all_li[cur2].className = "";
+						all_li[cur2].states = true;
+						
+						//添加背景
+						this.className = "li_bg";
+						this.states = false;
+						
+						cur2 = this.m;
+					}else{
+						this.className = "";
+						this.states = true;
+					}
+				}
+			}
+		}
+	</script>
+</head>
+<body>
+	<p id="introduce">此文件模拟的是QQ列表,点击列表名称,展开对应的列表内容,同时将上一次点击展开的列表合上.</p>
+	<div id="box">
+		<div>
+			<p>我的好友</p>
+			<ul>
+				<li>kity</li>
+				<li>猫咪</li>
+				<li>海贼王</li>
+				<li>叮当猫</li>
+			</ul>
+		</div>
+		<div>
+			<p>企业好友</p>
+			<ul>
+				<li>张三</li>
+				<li>李四</li>
+			</ul>
+		</div>
+		<div>
+			<p>黑名单</p>
+			<ul>
+				<li>马云</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
