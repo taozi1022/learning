@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>多选</title>
+		<style>
+			div{
+				display: inline-block;
+				width: 60px;
+				height: 30px;
+				border: 1px solid #000;
+				font: 18px/30px "微软雅黑";
+				text-align: center;
+			}
+			div:hover{
+				cursor: pointer;
+			}
+			div.choose{
+				background: lightseagreen;
+				color: #fff;
+			}
+			p{
+				display: inline-block;
+			}
+			strong{
+				font: 30px/40px '宋体';
+				color: blue;
+			}
+		</style>
+		<script>
+			window.onload = function(){
+				//获取页面中所有的div
+				var allDiv = document.getElementsByTagName("div");
+				//点击每个div时，给当前div添加className
+				for( var i = 0; i < allDiv.length; i++){
+					//自定义每个div的开关状态
+					allDiv[i].states = true;
+					//点击每个div
+					allDiv[i].onclick = function(){
+						//进行开关状态的判断
+						if(this.states){
+							this.className = "choose";
+							//更改开关状态
+							this.states = false;
+						}else{
+							this.className = "";
+							//更改开关状态
+							this.states = true;
+						}
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<strong>模拟多选</strong>
+		<p>个人爱好:</p>
+		<div>游泳</div>
+		<div>听音乐</div>
+		<div>其它</div>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>单选</title>
+		<style>
+			div{
+				display: inline-block;
+				width: 50px;
+				height: 30px;
+				border: 1px solid #000;
+				font: 18px/30px "微软雅黑";
+				text-align: center;
+			}
+			div:hover{
+				cursor: pointer; 
+			}
+			div.choose{
+				background: lightseagreen;
+				color: #fff;
+			}
+			p{
+				display: inline-block;
+			}
+			strong{
+				font: 30px/40px '宋体';
+				color: blue;
+			}
+		</style>
+<script>
+	window.onload = function(){
+		//获取页面中所有的div
+		var allDiv = document.getElementsByTagName("div");
+		//点击每个div时，给当前div添加className
+		for( var i = 0; i < allDiv.length; i++){
+			allDiv[i].onclick = function(){
+				//点击每一个div时，清空所有div的className
+				for( var j = 0; j < allDiv.length; j++){
+					allDiv[j].className = "";
+				}
+				this.className = "choose";
+			}
+		}
+	}
+</script>
+	</head>
+	<body>
+		<strong>模拟单选</strong>
+		<p>性别:</p>
+		<div>男</div>
+		<div>女</div>
+		<div>保密</div>
+	</body>
+</html>
