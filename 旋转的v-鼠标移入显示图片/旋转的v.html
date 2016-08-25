@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>旋转的v</title>
+		<style type="text/css">
+			ul{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				position: relative;
+			}
+		
+			#list li{
+				position: absolute;
+				width: 50px;
+				height: 50px;
+				background: red;
+				border: 1px solid #000;
+			}
+			#list{
+				width: 252px;
+				height: 252px;
+			}
+			#introduce{
+				text-indent: 2em;
+				max-width: 400px;
+				line-height: 30px;
+				font-size: 20px;
+				border: 2px solid deepskyblue;
+				padding: 10px;
+				background: pink;
+			}
+			
+		</style>
+<script>
+window.onload = function(){
+	
+	var btn = document.getElementsByTagName("input");
+	var list = document.getElementById("list");
+	var list_li = list.getElementsByTagName("li");
+	var num = 5;
+
+	
+	var n = 0;
+	
+	//点击按钮
+	btn[0].onclick = function(){
+		//进行判断
+		if(n==0){
+			//定义空的变量
+			var str = "";
+			//用for生成上v
+			for(var i = 0; i < num; i++){
+				if(i<num/2){
+					str += '<li style="top: '+i*50+'px;left: '+i*50+'px;">'+i+'</li>';
+				}else{
+					str += '<li style="top: '+(num-1-i)*50+'px;left: '+i*50+'px;">'+i+'</li>';
+				}
+			}
+			//将str赋给页面结构
+			list.innerHTML = str;
+			//改变n的值
+			n++;
+		}else if(n==1){//继续判断n的值
+			list.innerHTML = "";
+			var str = "";
+			//用for生成一个右v
+			for(var i = 0; i < num; i++){
+				if(i<num/2){
+					str += '<li style="top: '+i*50+'px;right: '+i*50+'px;">'+i+'</li>';
+				}else{
+					str += '<li style="top: '+i*50+'px;right: '+(num-1-i)*50+'px;">'+i+'</li>';
+				}
+			}
+			//将str赋给页面结构
+			list.innerHTML = str;
+			//改变n的值
+			n++;
+		}else if(n==2){//继续判断n的值
+			list.innerHTML = "";
+			var str = "";
+			//用for生成一个下v
+			for(var i = 0; i < num; i++){
+				if(i<num/2){
+					str += '<li style="left: '+i*50+'px;bottom: '+i*50+'px;">'+i+'</li>';
+				}else{
+					str += '<li style="left: '+i*50+'px;bottom: '+(num-1-i)*50+'px;">'+i+'</li>';
+				}
+			}
+			list.innerHTML = str;
+			n++;
+		}else{
+			list.innerHTML = "";
+			var str = "";
+			//用for生成一个左v
+			for(var i = 0; i < num; i++){
+				if(i<num/2){
+					str += '<li style="top: '+i*50+'px;left: '+i*50+'px;">'+i+'</li>';
+				}else{
+					str += '<li style="top: '+i*50+'px;left: '+(num-1-i)*50+'px;">'+i+'</li>';
+				}
+			}
+			list.innerHTML = str;
+			//将n的值设置为初始值
+			n=0;
+		}
+	}
+	
+}
+	
+</script>
+		
+	</head>
+	<body>
+		<p id="introduce">点击按钮,页面中会生成一个V字型,再次点击按钮,V字型进行旋转.</p>
+		<input type="button" value="生成DIV" />
+		<ul id="list">
+			<!--<li style="position: absolute;top: i*50px;left: i*50px;"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>-->
+		</ul>
+	</body>
+</html>

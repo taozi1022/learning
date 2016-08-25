@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>点击生成100个div</title>
+		<style>
+			#box{
+				position: relative;
+			}
+			#box div{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 50px;
+				height: 50px;
+			}
+		</style>
+		<script>
+			window.onload = function(){
+				
+				var btn = document.getElementById("btn");
+				var box = document.getElementById("box");
+				var list_div = box.getElementsByTagName("div");
+				
+				//点击按钮，生成100个div
+				btn.onclick = function(){
+					var str = "";
+					
+					for(var i = 0; i < 100; i++){
+						//left的行数  0--9 10--19 20--29。。。
+						var l = i%10;
+						//距top的值  0 50 100 150。。。。
+						var t = Math.floor(i/10);
+						str += '<div style="left: '+(l*55)+'px;top: '+(t*55)+'px;"></div>';
+					}
+					box.innerHTML = str;
+					for(var i = 0; i < 100; i++){
+						//鼠标移入显示颜色
+						list_div[i].onmouseover = function(){
+							this.style.background = "dodgerblue";
+						}
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<input type="button" id="btn" value="生成div" />
+		<div id="box">
+			<!--<div style="left: 0px;top: 0px;"></div>
+			<div></div>
+			<div></div>-->
+		</div>
+	</body>
+</html>

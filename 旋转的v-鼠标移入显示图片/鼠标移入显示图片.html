@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>鼠标移入显示图片</title>
+		<style>
+			#box{
+				position: relative;
+			}
+			#box div{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 50px;
+				height: 50px;
+				background : url(img/pic.png) no-repeat;
+			}
+			#introduce{
+				text-indent: 2em;
+				max-width: 500px;
+				line-height: 30px;
+				font-size: 20px;
+				border: 2px solid deepskyblue;
+				padding: 10px;
+				background: pink;
+			}
+		</style>
+		<script>
+			window.onload = function(){
+				
+				var btn = document.getElementById("btn");
+				var box = document.getElementById("box");
+				var list_div = box.getElementsByTagName("div");
+				
+				//点击按钮生成div
+				btn.onclick = function(){
+					//声明一个空的str
+					var str = "";
+					for(var i = 0; i < 100; i++){
+						//left的行数  0--9 10--19 20--29。。。
+						var l = i%10;
+						//距top的值  0 50 100 150。。。。
+						var t = Math.floor(i/10);
+						//生成页面结构
+						str += '<div style="left: '+(l*52)+'px;top: '+(t*52)+'px; background-position :'+(-l*52)+'px '+(-t*52)+'px; opacity : 0;"></div>';
+					}
+					//将str的结构整体赋给box的结构
+					box.innerHTML = str;
+					for(var i = 0; i < 100; i++){
+						list_div[i].onmouseover = function(){
+							this.style.opacity = 1;
+						}
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<p id="introduce">点击生成div按钮,页面中或生成100个透明的div,当鼠标移入时,相对应的位置显示图片.</p>
+		<input type="button" id="btn" value="生成div" />
+		<div id="box">
+			<!--<div style="left: 0px;top: 0px;"></div>
+			<div></div>
+			<div></div>-->
+		</div>
+	</body>
+</html>

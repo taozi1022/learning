@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>变色div</title>
+	<style type="text/css">
+		ul{
+			padding: 0;
+			margin: 0;
+			list-style: none;
+		}
+	
+		#list li{
+			float: left;
+			width: 50px;
+			height: 50px;
+			border: 1px solid #000;
+			margin: 10px;
+		}
+		#list .red{
+			background: red;
+		}
+		#list .blue{
+			background: blue;
+		}
+		#introduce{
+			max-width: 300px;
+			line-height: 30px;
+			font-size: 20px;
+			border: 2px solid deepskyblue;
+			padding: 10px;
+			background: pink;
+		}
+		
+	</style>
+	<script>
+		window.onload = function(){
+			
+		var btn = document.getElementById("btn");
+		var list = document.getElementById("list");
+		var list_li = list.getElementsByTagName("li");
+		
+		//定义颜色的字符串
+		var color = ["yellow","blue","green","pink"]
+		//点击按钮
+		
+		var num = 15;
+		btn.onclick = function(){
+			list.innerHTML = "";
+			for(var i = 0; i < num; i++){
+				list.innerHTML = list.innerHTML + '<li style="background: '+color[i%4]+';" >'+(i+1)+'</li>';
+			}
+		}
+	}
+	</script>
+</head>
+<body>
+	<p id="introduce">点击按钮,生成颜色不一的div</p>
+	<input type="button" id="btn" value="生成DIV" />
+	<ul id="list">
+		<!--<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>-->
+	</ul>
+</body>
+</html>
