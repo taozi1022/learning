@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			#box{
+				width: 100px;
+				height: 100px;
+				background: red;
+			}
+			p{
+				margin: 0;
+				display: inline-block;
+			}
+		</style>
+		<script>
+			
+			window.onload = function(){
+				var keyInput = document.getElementById("key");
+				var valueInput = document.getElementById("value");
+				var btnInput = document.getElementById("btn");
+				var box = document.getElementById("box");
+
+				//点击btn
+				btnInput.onclick = function(){
+					//获取input的值
+					var input1Value = keyInput.value;
+					var input2Value = valueInput.value;
+
+					box.style[keyInput.value] = valueInput.value;
+				}
+			};
+		</script>
+	</head>
+
+	<body>
+		<p>key：</p>
+		<input type="text" id="key" />
+		<p>value：</p>
+		<input type="text" id="value" />
+		<input type="button" id="btn" value="改变div" />
+		<div id="box"></div>
+	</body>
+</html>

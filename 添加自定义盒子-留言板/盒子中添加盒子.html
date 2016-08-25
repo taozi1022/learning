@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>盒子中再加盒子</title>
+		<style>
+			#box{
+				width: 1300px;
+				height: 600px;
+				border: 1px solid #000;
+			}
+			#box div{
+				float: left;
+				border: 2px solid #000;
+			}
+		</style>
+		
+		<script>
+			window.onload = function(){
+				var btn = document.getElementById("btn");
+				var box = document.getElementById("box");
+				
+				//点击按钮
+				btn.onclick = function(){
+					//获取boxWidth和boxHeight的数值
+					var Width = divWidth.value;
+					var Height = divHeight.value;
+					var bg = background.value;
+					var bd = border.value;
+					
+					//在box中添加div
+//					box.innerHTML = box.innerHTML + "<div style='width: "+Width+"px;height: "+Height+"px;background: "+bg+";border:"+bd+";'></div>"
+//				}
+				
+				box.innerHTML = box.innerHTML + '<div style="width: '+Width+'px;height: '+Height+'px;background: '+bg+';border:'+bd+';"></div>'
+				}
+			}
+		</script>
+	</head>
+	<body>
+		width:<input type="text" id="divWidth" />
+		height:<input type="text" id="divHeight" />
+		background:<input type="text" id="background" />
+		border:<input type="text" id="border" />
+		<input type="button" id="btn" value="添加box" />
+		<div id="box"></div>
+		<div style='width: "+Width+";height: "+Height+";'></div>
+		<div style="width: 100px;height: 100px;"></div>
+	</body>
+</html>

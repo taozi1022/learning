@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>留言板</title>
+	</head>
+	<script>
+		window.onload = function(){
+			var text = document.getElementById("text");
+			var btn = document.getElementById("btn");
+			var list = document.getElementById("list");
+			
+			btn.onclick = function(){
+				//获取text.value
+				var textInput = text.value;
+				//在ul中添加留言
+				list.innerHTML =list.innerHTML + "<li>"+textInput+"</li>";
+				text.value = '';
+			}
+		}
+	</script>
+	<body>
+		<input type="text" id="text" />
+		<input type="button" id="btn" value="发表留言" />
+		<ul id="list">
+			<li>这里发表留言</li>
+		</ul>
+	</body>
+</html>
