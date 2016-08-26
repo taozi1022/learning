@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>生成10个框框</title>
+		<style type="text/css">
+			ul{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+		
+			#list li{
+				float: left;
+				width: 50px;
+				height: 50px;
+				border: 1px solid #000;
+				margin: 10px;
+			}
+			#list .red{
+				background: red;
+			}
+			#list .blue{
+				background: blue;
+			}
+			
+			
+		</style>
+		<script>
+			window.onload = function(){
+				
+				var btn = document.getElementById("btn");
+				var list = document.getElementById("list");
+				var list_li = list.getElementsByTagName("li");
+			
+
+			btn.onclick = function(){
+				list.innerHTML = "";
+				for(var i = 0; i < 10; i++){
+					list.innerHTML = list.innerHTML + '<li>'+i+'</li>';	
+				}
+				for(var i = 0; i < 10; i++){
+					list_li[i].onmouseover = function(){
+						this.style.background = "red";
+					}
+					//鼠标移出，背景为原来的背景
+					list_li[i].onmouseout = function(){
+						this.style.background = "";
+					}
+				}
+			}
+			
+			
+			
+			
+		}
+		</script>
+	</head>
+	<body>
+		<input type="button" id="btn" value="生成DIV" />
+		<ul id="list">
+			<!--<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>-->
+		</ul>
+	</body>
+</html>
