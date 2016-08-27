@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>图片顺序播放和循环播放</title>
+	<style>
+		#div{
+			width: 280px;
+			height: 300px;
+			margin: 0 auto;
+			/*border: 1px solid #000;*/
+		}
+		img{
+			border: none;
+			vertical-align: top;
+		}
+		#pre,
+		#next{
+			border: none;
+			padding: 0;
+			width: 20px;
+			height: 50px;
+			font-size: 30px;
+			background: #ccc;
+			opacity: .5;
+			cursor: pointer;
+		}
+		p{
+			margin: 5px 0;
+		}
+		#num,#title{
+			text-align: center;
+			line-height: 30px;
+			background: pink;
+			opacity: .5;
+		}
+		#box{
+			position: relative;
+			width: 280px;
+			height: 220px;
+			margin: 0 auto;
+		}
+		
+		#btn{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 280px;
+			height: 180px;
+		}
+		#pre{
+			position: absolute;
+			top: 85px;
+			left: -30px;
+			
+		}
+		#next{
+			position: absolute;
+			top: 85px;
+			right: -30px;
+		}
+		#btn1{
+			width: 150px;
+			margin: 0 auto;
+		}
+		#html{
+			width: 280px;
+			text-align: center;
+			
+		}
+	</style>
+	
+	<script>
+		window.onload = function(){
+			var pre = document.getElementById("pre");
+			var next = document.getElementById("next");
+			var imgs = document.getElementById("imgs");
+			var num = document.getElementById("num");
+			var title = document.getElementById("title");
+			var order = document.getElementById("order");
+			var cycle = document.getElementById("cycle");
+			var html = document.getElementById("html");
+			//定义数组
+			var arr = ["img/content_img1.png","img/content_img2.png","img/content_img3.png","img/content_img4.png","img/content_img5.png"];
+			var arrTitle = ["第一张","第二张","第三张","第四张","第五张"];
+			
+			//定义变量n
+			var n = 0;
+			//运行程序是自动计算数组长度
+			num.innerHTML = '1/'+arr.length;
+			title.innerHTML = arrTitle[n];
+			
+			var onOff = true;
+			
+			order.onclick = function(){
+				html.innerHTML = '图片只能到第一张或最后一张';
+				onOff = true;
+				n = 0;
+				num.innerHTML = '1/'+arr.length;
+				title.innerHTML = arrTitle[n];
+			}
+			cycle.onclick = function(){
+				html.innerHTML = '图片可从最后一张到第一张循环切换';
+				onOff = false;
+				n = 0;
+				num.innerHTML = '1/'+arr.length;
+				title.innerHTML = arrTitle[n];
+			}
+			
+			pre.onclick = function(){
+				n= n-1;
+				if(n<0){
+					if(onOff){
+						alert("已经是第一张了");
+						n=0;
+					}else{
+						n=arr.length-1;
+					}
+				}
+				imgs.src = arr[n];
+				num.innerHTML = n+1+'/'+arr.length;
+				title.innerHTML = arrTitle[n];
+			}
+			next.onclick = function(){
+				n = n+1;
+				if(n>arr.length-1){
+					if(onOff){
+						alert("最后一张了");
+						n=arr.length-1;
+					}else{
+						n=0;
+					}
+				}
+				imgs.src = arr[n];
+				num.innerHTML = n+1+'/'+arr.length;
+				title.innerHTML = arrTitle[n];
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="div">
+		<div id="btn1">
+			<input type="button" id="order" value="顺序播放" />
+			<input type="button" id="cycle" value="循环播放" />
+		</div>
+		<p id="html">图片只能到第一张或最后一张</p>
+		<div id="box">
+			<p id="num">1/3</p>
+			<img src="img/content_img1.png" id="imgs"/>
+			<p id="title">第一张</p>
+			<div id="btn">
+				<input type="button" id="pre" value="<" />
+				<input type="button" id="next" value=">" />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

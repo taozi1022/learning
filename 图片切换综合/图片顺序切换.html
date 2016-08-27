@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图片顺序播放</title>
+		<style>
+			img{
+				border: none;
+				vertical-align: top;
+			}
+			input{
+				border: none;
+				padding: 0;
+				width: 20px;
+				height: 50px;
+				font-size: 30px;
+				background: #ccc;
+				opacity: .5;
+				cursor: pointer;
+			}
+			
+			p{
+				text-align: center;
+				margin: 5px 0;
+			}
+			#num,#title{
+				text-align: center;
+				line-height: 30px;
+				background: pink;
+				opacity: .5;
+			}
+			
+			#box{
+				position: relative;
+				width: 280px;
+				height: 180px;
+				margin: 0 auto;
+			}
+			#btn{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 280px;
+				height: 180px;
+			}
+			#pre{
+				position: absolute;
+				top: 85px;
+				left: 0;
+				
+			}
+			#next{
+				position: absolute;
+				top: 85px;
+				right: 0;
+			}
+			
+		
+		
+			
+		</style>
+		
+		<script>
+			window.onload = function(){
+				var pre = document.getElementById("pre");
+				var next = document.getElementById("next");
+				var imgs = document.getElementById("imgs");
+				
+				
+				//定义数组
+				var arr = ["img/content_img1.png","img/content_img2.png","img/content_img3.png","img/content_img4.png","img/content_img5.png"];
+				var arrTitle = ["第一张","第二张","第三张","第四张","第五张"];
+				
+				//定义变量n
+				var n = 0;
+				num.innerHTML = '1/'+arr.length;
+				
+				pre.onclick = function(){
+					if(n<1){
+						alert("已经是第一张了");
+					}else{
+						n=n-1;
+					}
+					imgs.src = arr[n];
+					num.innerHTML = n+1+'/'+arr.length;
+					title.innerHTML = arrTitle[n];
+				}
+				
+				next.onclick = function(){
+					if(n>3){
+						alert("最后一张了");
+					}else{
+						n = n+1;
+					}
+					imgs.src = arr[n];
+					num.innerHTML = n+1+'/'+arr.length;
+					title.innerHTML = arrTitle[n];
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<p>图片顺序播放</p>
+		<div id="box">
+			<p id="num">1/3</p>
+			<img src="img/content_img1.png" id="imgs"/>
+			<p id="title">第一张</p>
+			<div id="btn">
+				<input type="button" id="pre" value="<" />
+				<input type="button" id="next" value=">" />
+			</div>
+		</div>
+		
+	</body>
+</html>
