@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>文字和背景同时运动</title>
+	<style>
+		ul{
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			position: relative;
+		}
+		#div{
+			width: 504px;
+			margin: 0 auto;
+			overflow: hidden;
+		}
+		#box{
+			width: 500px;
+			height: 50px;
+			border: 2px solid #000;
+			margin-top: 200px;
+			z-index: 2;
+		}
+		#bg{
+			width: 500px;
+			height: 54px;
+			background: pink;
+			margin-top: -54px;
+			margin-left: -500px;
+			opacity: 0;
+		}
+		li{
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			font: 20px/50px "宋体";
+			display: inline-block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			opacity: 1;
+		}
+	</style>
+</head>
+<body>
+	<div id="div">
+		<ul id="box">
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+			<li>+1</li>
+		</ul>
+		<div id="bg"></div>
+	</div>
+	
+</body>
+<script type="text/javascript" src="js/MTween3.js" ></script>
+<script>
+window.onload = function(){
+	var box = document.getElementById("box");
+	var bg = document.getElementById("bg");
+	var all_li = box.getElementsByTagName("li");
+	
+	for(var i = 0; i < all_li.length; i++){
+		all_li[i].style.left = i*50 + 'px';
+	}
+	
+
+	var timer = null;
+	function fn(n){
+		timer = setTimeout(function(){
+			MTween(all_li[n],{top:-200,opacity:0},500,"linear",function(){
+				if(n===all_li.length-1){
+					timer = null;
+					for (var j = 0; j < all_li.length; j++) {
+						all_li[j].style.top = 0;
+						MTween(all_li[j],{opacity:1},500);
+						bg.style.marginLeft = '-500px';
+					}
+				}
+			})
+
+		},n*80)
+	}
+	box.onclick = function(){
+		//防止狂点
+		if(timer) return;
+		for(var i = 0; i< all_li.length; i++){
+			fn(i);
+		}
+		//渐变的背景
+		MTween(bg,{marginLeft:0,opacity:1},1000,"linear",function(){
+			MTween(bg,{opacity:0},500,"linear");
+		});
+		
+	}
+	
+}
+	
+</script>
+</html>

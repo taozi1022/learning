@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>掉落的方块</title>
+		<style>
+			ul{
+				position: relative;
+			}
+			li{
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 50px;
+				height: 50px;
+				background: deepskyblue;
+				font: 30px/50px "微软雅黑";
+				color: #fff;
+				text-align: center;
+			}
+		</style>
+		<script src="js/MTween.js" ></script>
+		<script>
+			window.onload = function(){
+				var lis = document.getElementsByTagName("li");
+//				var li_len = parseInt(getComputedStyle(lis[0]).width);
+				for(var i = 0; i < lis.length; i++){
+					lis[i].style.left = i*60 + 'px';
+				}
+				
+				var timer = null;
+				var onOff = true;
+				function fn(n){
+					var target = onOff ? 400 : 0;
+					console.log(n)
+					timer = setTimeout(function (){
+						MTween(lis[n],"top",800,target,"linear",function (){
+							if( n === lis.length-1 ){
+								timer = null;
+								onOff = !onOff;
+							}	
+						})
+					},n*100);
+				}
+				document.onclick = function(){
+					if(timer) return;
+					for(var j = 0; j < lis.length; j++){
+						fn(j);
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<ul id="list">
+			<li>点</li>
+			<li>击</li>
+			<li>页</li>
+			<li>面</li>
+			<li>中</li>
+			<li>的</li>
+			<li>任</li>
+			<li>何</li>
+			<li>地</li>
+			<li>方</li>
+			<li>，</li>
+			<li>会</li>
+			<li>出</li>
+			<li>现</li>
+			<li>不</li>
+			<li>一</li>
+			<li>样</li>
+			<li>的</li>
+			<li>效</li>
+			<li>果</li>
+			<li>!</li>
+		</ul>
+	</body>
+</html>
