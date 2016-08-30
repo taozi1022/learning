@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>实时倒计时</title>
+		<style>
+			#time{
+				width: 500px;
+				font: 30px/40px '宋体';
+				margin: 100px auto;
+			}
+		</style>
+		<script type="text/javascript">
+			window.onload = function(){
+				
+				var time = document.getElementById("time");
+				
+				//获取到当前时间
+				var t = new Date();
+				//设置未来的时间
+				var future = new Date( 2016,9,1 );
+				//计算时间差的秒数
+				var cha = (future.getTime() - t.getTime())/1000 ;
+				
+				var day = parseInt((cha / 86400));
+				var h = parseInt((cha % 86400 /3600));
+				var m = parseInt((cha % 86400 % 3600 / 60));
+				var s = parseInt((cha %60));
+				
+				time.innerHTML = '距离10月1还有'+day+'天'+h+'时'+m+'分'+s+'秒';
+				
+				setInterval(function(){
+					//获取到当前时间
+					var t = new Date();
+					//计算时间差的秒数
+					var cha = (future.getTime() - t.getTime())/1000 ;
+					
+					var day = parseInt((cha / 86400));
+					var h = parseInt((cha % 86400 /3600));
+					var m = parseInt((cha % 86400 % 3600 / 60));
+					var s = parseInt((cha %60));
+					
+					time.innerHTML = '距离10月1还有'+day+'天'+h+'时'+m+'分'+s+'秒';
+				},1000)
+				
+				
+				
+			}
+		</script>
+	</head>
+	<body>
+		<div id="time">
+			距离10月1还有x天x时x分x秒
+		</div>
+	</body>
+</html>
