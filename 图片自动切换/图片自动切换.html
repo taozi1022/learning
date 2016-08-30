@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图片自动切换</title>
+		<style>
+			#box{
+				position: relative;
+				width: 500px;
+				height: 320px;
+				margin: 0 auto;
+				overflow: hidden;
+			}
+			img{
+				width: 500px;
+				border: none;
+				vertical-align: top;
+			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			li{
+				position: relative;
+				width: 500px;
+				float: left;
+			}
+			p{
+				width: 500px;
+				margin: 0;
+				position: absolute;
+				bottom: -100px;
+				left: 0;
+				font: bold 20px/100px "微软雅黑";
+				text-align: center;
+				background: greenyellow;
+				opacity: .5;
+			}
+			
+		</style>
+		<script type="text/javascript" src="js/tools.js" ></script>
+		<script type="text/javascript" src="js/MTween.js" ></script>
+		<script>
+			window.onload = function(){
+				var list = $("#list");//ul
+				var all_li = $("li",list);//li
+				var all_p = $("p",list);//p
+				var li_len = parseInt(getComputedStyle(all_li[0]).width);//1个li的宽度
+				var len = all_li.length;//li的个数
+				
+				list.style.width = len * li_len + 'px';//自动获取ul的宽度
+				
+				var n = 0;//记录当前图片是第几张
+				list.style.left = -n * li_len + 'px';
+				
+				var timer;//记录定时器编号
+				run();//调用函数
+				function run(){
+					timer = setInterval(function(){//重复定时器
+						if(list.timer) return;
+						MTween(all_p[n],"bottom",500,0,"linear",function(){//显示第n个的标题
+							setTimeout(function(){//延迟500ms,隐藏标题
+								MTween(all_p[n],"bottom",500,-100,"linear",function(){
+									n++;
+									var l = -n * li_len;//定义left的值
+									MTween(list,"left",500,l,"linear",function(){
+										if(n === len-1){
+											n = 0;
+											list.style.left = -n * li_len + 'px';
+										}
+									});//调用函数
+								});
+							},500)
+						});
+					},800)
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="list">
+				<li><img src="img/content_img1.png" /><p>第一张</p></li>
+				<li><img src="img/content_img2.png" /><p>第二张</p></li>
+				<li><img src="img/content_img3.png" /><p>第三张</p></li>
+				<li><img src="img/content_img4.png" /><p>第四张</p></li>
+				<li><img src="img/content_img5.png" /><p>第五张</p></li>
+				<li><img src="img/content_img1.png" /><p>第一张</p></li>
+			</ul>
+			
+		</div>
+	</body>
+</html>
