@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>轮播图无缝滚动--加点</title>
+		<style>
+			img{
+				width: 500px;
+				border: none;
+				vertical-align: top;
+			}
+			input{
+				border: none;
+				padding: 0;
+				width: 20px;
+				height: 50px;
+				font-size: 30px;
+				background: #ccc;
+				opacity: .5;
+				cursor: pointer;
+			}
+			ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+			li{
+				width: 500px;
+				float: left;
+			}
+			#box{
+				position: relative;
+				width: 500px;
+				height: 322px;
+				margin: 0 auto;
+				overflow: hidden;
+			}
+			#btn{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 500px;
+				height: 320px;
+			}
+			#btn p{
+				position: absolute;
+				bottom: 0;
+				left: 200px;
+			}
+			#btn span{
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				border: 1px solid #000;
+				border-radius: 10px;
+			}
+			#prev{
+				position: absolute;
+				top: 130px;
+				left: 0;
+				
+			}
+			#next{
+				position: absolute;
+				top: 130px;
+				right: 0;
+			}
+			.bg{
+				background: yellow;
+			}
+		</style>
+		<script type="text/javascript" src="js/tools.js" ></script>
+		<script type="text/javascript" src="js/MTween.js" ></script>
+		<script>
+			window.onload = function(){
+				var list = $("#list");//ul
+				var next = $("#next");
+				var prev = $("#prev");
+				var all_li = $("li",list);//li
+				var spans = $("span",$("#btn"));
+				var li_len = parseInt(getComputedStyle(all_li[0]).width);//1个li的宽度
+				var len = all_li.length;//li的个数
+				
+				list.style.width = len * li_len + 'px';//自动获取ul的宽度
+				
+				var n = 1;//记录当前图片是第几张
+				var m = 1;
+				var p = 1;
+				list.style.left = -n * li_len + 'px';
+				
+				var timer;//记录定时器编号
+				run();//调用函数
+				//自动播放封装的函数
+				function run(){
+				//	自动播放
+					timer = setInterval(function(){
+						n++;//图片位置+1
+						var l = -n * li_len;//定义left的值,值为负数,用当前图片的位置*li的width
+						MTween(list,"left",1000,l,"linear",function(){
+							if(n === len-1){
+								n = 1;
+								list.style.left = -n * li_len + 'px';
+								
+							}
+							spans[m-1].className = "";
+							spans[n-1].className = "bg";
+							m = n;
+						});//调用函数
+					},2000)
+					//设置小圆点
+					
+				
+				
+				}
+				//鼠标移入下一张,清掉定时器
+				next.onmouseover = function(){
+					clearInterval(timer);
+				}
+//				//鼠标移出下一张的时候,继续执行定时器
+				next.onmouseout = function(){
+					run();
+				}
+//				//鼠标移入上一张,清掉定时器
+				prev.onmouseover = function(){
+					clearInterval(timer);
+				}
+//				//鼠标移出上一张的时候,继续执行定时器
+				prev.onmouseout = function(){
+					run();
+				}
+				//点击下一张
+				next.onclick = function(){
+					//判断当前是否有定时器在运动
+					if(list.timer){
+						return;
+					}
+					n++;//图片位置+1
+					var l = -n * li_len;//定义left的值,值为负数,用当前图片的位置*li的width
+					MTween(list,"left",1000,l,"linear",function(){
+						//判断n === len-1;
+						if(n === len-1){
+							n = 1;
+							list.style.left = -n * li_len + 'px';
+						}
+						for(var j = 0;j<spans.length; j++){
+							spans[j].className = "";
+						}
+					//	spans[m-1].className = "";
+						spans[n-1].className = "bg";
+					//	m = n;
+					});//调用函数
+				}
+				
+				prev.onclick = function(){
+					//判断当前是否有定时器在运动
+					if(list.timer){
+						return;
+					}
+					n--;
+					var l = -n * li_len;
+					MTween(list,"left",1000,l,"linear",function(){
+						//清空所有的点的背景
+						for(var j = 0;j<spans.length; j++){
+							spans[j].className = "";
+						}
+						
+						
+						//判断n === 0;
+						if(n === 0){
+							n = len-2;
+							list.style.left = -n * li_len + 'px';
+						}
+						spans[n-1].className = "bg";
+						
+					});
+				}
+				//圆点移入事件
+				for(var i = 0; i < spans.length; i++){
+					spans[i].onmouseover = function(){
+						clearInterval(timer);
+					}
+					spans[i].onmouseout = function(){
+						run();
+					}
+				}
+				//圆点的点击事件
+				
+				for(var i = 0; i < spans.length; i++){
+					spans[i].index = i;
+					spans[i].onclick = function(){
+						n = this.index;
+						for(var j = 0;j<spans.length; j++){
+							spans[j].className = "";
+						}
+						list.style.left = -(n+1) * li_len + 'px';
+						spans[n].className = "bg";
+						p = n;
+					}
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="box">
+			<ul id="list">
+				<li><img src="img/content_img5.png" /></li>
+				<li><img src="img/content_img1.png" /></li>
+				<li><img src="img/content_img2.png" /></li>
+				<li><img src="img/content_img3.png" /></li>
+				<li><img src="img/content_img4.png" /></li>
+				<li><img src="img/content_img5.png" /></li>
+				<li><img src="img/content_img1.png" /></li>
+			</ul>
+			<div id="btn">
+				<input type="button" id="prev" value="<" />
+				<input type="button" id="next" value=">" />
+				<p>
+					<span class="bg"></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
