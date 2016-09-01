@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>随机打乱图片顺序</title>
+	<style>
+		img{
+			vertical-align: top;
+			width: 200px;
+			height: 135px;
+		}
+		ul{
+			width: 920px;
+			padding: 0;
+			margin: 0 auto;
+			list-style: none;
+			background: pink;
+		}
+		div{
+			width: 150px;
+			margin: 10px auto;
+		}
+		li{
+			width: 200px;
+			border: 2px solid mediumspringgreen;
+			display: inline-block;
+			margin: 10px;
+		}
+		p{
+			width: 200px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div id="btn">
+		<button>从大到小</button>
+		<button>打乱顺序</button>
+	</div>
+	<ul id="list">
+		<!--<li>
+			<img src="img/2.jpg"/>
+			<p>第一张</p>
+		</li>
+		<li>
+			<img src="img/3.jpg"/>
+			<p>第二张</p>
+		</li>
+		<li>
+			<img src="img/7.jpg"/>
+			<p>第三张</p>
+		</li>
+		<li>
+			<img src="img/13.jpg"/>
+			<p>第四张</p>
+		</li>
+		<li>
+			<img src="img/14.jpg"/>
+			<p>第五张</p>
+		</li>
+		<li>
+			<img src="img/18.jpg"/>
+			<p>第六张</p>
+		</li>
+		<li>
+			<img src="img/21.jpg"/>
+			<p>第七张</p>
+		</li>
+		<li>
+			<img src="img/25.jpg"/>
+			<p>第八张</p>
+		</li>-->
+	</ul>
+</body>
+<script type="text/javascript" src="js/tools.js" ></script>
+<script>
+	//存图片的数组
+	/*var imgs = ['2','3','7','13','14','18','21','25'];
+	//图片对应标题的数组
+	var titles = ['第一张','第二张','第三张','第四张','第五张','第六张','第七张','第八张'];*/
+	var list = document.getElementById("list");
+	var str = [
+		{
+			img:'2',
+			title:'第一张'
+		},
+		{
+			img:'3',
+			title:'第二张'
+		},
+		{
+			img:'7',
+			title:'第三张'
+		},
+		{
+			img:'13',
+			title:'第四张'
+		},
+		{
+			img:'14',
+			title:'第五张'
+		},
+		{
+			img:'18',
+			title:'第六张'
+		},
+		{
+			img:'21',
+			title:'第七张'
+		},
+		{
+			img:'25',
+			title:'第八张'
+		}
+	]
+	//自动生成页面结构
+	var html = '';
+	for(var i = 0;i < str.length; i++){
+		html += '<li><img src="img/'+str[i].img+'.jpg"/><p>'+str[i].title+'</p></li>';
+	}
+	list.innerHTML = html;
+	
+//	console.log(titles.reverse());
+	//点击从大到小按钮,获取到当前的li,操作li的排序
+	var btn1 = $('button',$('#btn'))[0];
+	var btn2 = $('button',$('#btn'))[1];
+	var lis = $('li',list);
+	var onOff = true;
+	var all_li = [];
+	for(var i = 0; i < lis.length; i++){
+		all_li.push(lis[i]);
+	}
+		
+	btn1.onclick = function(){
+		html = '';
+		//颠倒顺序
+		all_li.reverse();
+		//控制按钮的页面结构
+		if(onOff){
+			btn1.innerHTML = '从小到大';
+			for(var i = str.length-1;i >= 0; i--){
+				html += '<li><img src="img/'+str[i].img+'.jpg"/><p>'+str[i].title+'</p></li>';
+			}
+		}else{
+			btn1.innerHTML = '从大到小';
+			for(var i = 0;i < str.length; i++){
+				html += '<li><img src="img/'+str[i].img+'.jpg"/><p>'+str[i].title+'</p></li>';
+			}
+		}
+		list.innerHTML = html;
+		onOff = ! onOff;
+	}
+	//随机排序
+	btn2.onclick = function(){
+		all_li.sort(function (){
+			return  0.5 - Math.random()
+		});
+		html = '';
+		for(var i = 0; i < lis.length; i++){
+			html += '<li>'+all_li[i].innerHTML+'</li>';
+		}
+		list.innerHTML = html;
+	}
+</script>
+</html>
