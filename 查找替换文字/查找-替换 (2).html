@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>查找-替换</title>
+	<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+	<section>
+		<div id="content">Web前端开发技术包括三个要素：HTML、CSS和JavaScript，随着RIA的流行和普及，Flash/Flex、Silverlight、XML和服务器端语言也是前端开发工程师应该掌握的。随着时代的发展，前端开发技术的三要素也演变成为现今的：html5，css3，jquery。Web前端开发工程师既要与上游的交互设计师、视觉设计师和产品经理沟通，又要与下游的服务器端工程师沟通，需要掌握的技能非常多。这就从知识的广度上对Web前端开发工程师提出了要求。如果要精于前端开发这一行，也许要先精十行。然而，全才总是少有的。</div>
+		<div id="navs">
+			<p>展开</p>
+			<p>查找</p>
+			<p>替换</p>
+		</div>
+		<div id="inputs">
+			<nav id="navs2">
+				<span>查找</span>
+				<span>替换</span>
+				<span>X</span>
+			</nav>
+			<p id='find'>
+				<input type="text" id="text" />
+				<input type="button" id="btn_find" value="查找"/>
+			</p>
+			<p id='change'>
+				<input type="text" id="text1" />
+				<input type="text" id="text2"/>
+				<input type="button" id="btn_change" value="替换"/>
+			</p>
+		</div>
+	</section>
+</body>
+<script type="text/javascript" src="js/tools.js" ></script>
+<script>
+	//获取展开
+	var open = $('p',$('#navs'));//展开
+	var open2 = $('span',$('#navs2'));//展开
+	//获取input
+	var inputs = $('#inputs');//最底下的一个块
+	var find = $('#find');  //最底下的查找
+	var change = $('#change');  //最底下的替换
+	var btn_find = $('#btn_find');//查找按钮
+	var text = $('#text');//查找按钮
+	var btn_change = $('#btn_change');
+	var text1 = $('#text1');//查找按钮
+	var text2 = $('#text2');//查找按钮
+	var onOff = true;
+	//点击展开(就是navs下的第一个p标签),将显示查找和替换
+	open[0].onclick = function(){
+		if(onOff){
+			open[1].style.display = "block";
+			open[2].style.display = "block";
+		}else{
+			open[1].style.display = "none";
+			open[2].style.display = "none";
+		}
+		onOff = !onOff;
+	}
+	
+	//点击查找和替换
+	function fn(obj,obj2,obj3,classNamecur,className){
+		obj.onclick =function(){
+			if(obj === open[1]){
+				content.innerHTML = str;
+			}
+			//显示inputs
+			inputs.style.display = 'block';
+			//隐藏查找的输入框和按钮
+			obj2.style.display = 'none';
+			classNamecur.className = "";//上一个背景清空
+			className.className = "yellow";//当前这个加背景
+			//显示替换的输入框和按钮
+			obj3.style.display = 'block';
+			//将展开里面的查找和替换收回去
+			open[1].style.display = 'none';
+			open[2].style.display = 'none';
+			onOff = !onOff;//改变开关值,确保下次点击展开按钮时无误.
+		}
+	}
+	fn(open[1],change,find,open2[1],open2[0]);//点击展开查找
+	fn(open[2],find,change,open2[0],open2[1]);//点击展开替换
+	
+	
+	//点击inputs中的查找
+	open2[0].onclick = function(){
+		content.innerHTML = str;
+		open2[1].className = "";//上一个背景清空
+		open2[0].className = "yellow";//当前这个加背景
+		//显示查找的输入框和按钮
+		find.style.display = 'block';
+		//隐藏替换的输入框和按钮
+		change.style.display = 'none';
+	}
+	//点击inputs中的替换
+	open2[1].onclick = function(){
+		content.innerHTML = str;
+		open2[0].className = "";//上一个背景清空
+		open2[1].className = "yellow";//当前这个加背景
+		//显示查找的输入框和按钮
+		change.style.display = 'block';
+		//隐藏替换的输入框和按钮
+		find.style.display = 'none';
+	}
+	
+	
+	//点击关闭按钮
+	open2[2].onclick = function(){
+		//隐藏inputs块
+		inputs.style.display = 'none';
+	}
+	var str =  content.innerHTML;//将页面结构给了str字符串,和text.value进行比较
+	//点击查找按钮的时候
+	btn_find.onclick = function(){
+		if(text.value == ' ') {
+			alert("输入内容不能为空格");
+			return;
+		}
+		if(text.value == '') {
+			alert("请输入要查找的内容");
+			return;
+		}
+		//获取到text.value
+		var val = text.value;
+		//判断输入的内容在页面结构中,执行程序,
+		if(str.indexOf(val) !== -1){
+			content.innerHTML = str.split(val).join('<span style="background:red;">'+val+'</span>');
+		}else{
+			alert(""+val+"不存在");
+		}
+		//将拼好的字符串给了页面结构
+		str = str.split(val).join(val);//下次再查找时,上次查找加的背景清空
+		text.value = '';
+	}
+	//替换按钮
+	btn_change.onclick = function(){
+		//判断前后的输入框里是否有值
+		if(text1.value == '' || text2.value == '' || text1.value == ' ' || text2.value == ' ') {
+			alert("请输入要替换的内容");
+			return;
+		}
+		//获取到text1.value
+		var val1 = text1.value;
+		//获取到text2.value
+		var val2 = text2.value;
+		if(str.indexOf(val1) !== -1){
+			//将拼好的字符串给了页面结构
+			content.innerHTML = str.split(val1).join('<span style="background:yellow;">'+val2+'</span>');
+		}else{
+			alert(""+val1+"不存在");
+		}
+		str = str.split(val1).join(val2);//下次再替换时,上次替换加的背景清空
+		//清空value值
+		text1.value = text2.value = '';
+	}
+</script>
+</html>
