@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>树形菜单</title>
+	<style>
+		#list li ul{
+			display: none;
+		}
+		#list li ul{
+			padding-left: 20px;
+		}
+		ul{
+			list-style: none;
+		}
+		#list li span{
+			color: red;
+			padding-right: 20px;
+		}
+	</style>
+</head>
+<body>
+	 <div id="list"></div>
+</body>
+<script>
+	var obj = [
+		{
+			title:'一级菜单',
+			child:[
+				{
+					title:'二级菜单',
+					child:[
+						{
+							title:'三级菜单',
+							child:[
+								{
+									title:'四级标题'
+								}
+							
+							]
+						},
+						{
+							title:'三级菜单',
+						}
+					]
+				},
+				{
+					title:'二级菜单',
+					child:[
+						{
+							title:'三级菜单',
+						},
+						{
+							title:'三级菜单',
+						}
+					]
+				}
+			]
+		},
+		{
+			title:'一级菜单',
+			child:[
+				{
+					title:'二级菜单',
+					child:[
+						{
+							title:'三级菜单',
+							child:[
+								{
+									title:'四级标题'
+								}
+							
+							]
+						},
+						{
+							title:'三级菜单',
+						}
+					]
+				},
+				{
+					title:'二级菜单',
+					child:[
+						{
+							title:'三级菜单',
+						},
+						{
+							title:'三级菜单',
+						}
+					]
+				}
+			]
+		},
+		{
+			title:'一级菜单',
+			child:[
+				{
+					title:'二级菜单',
+					child:[
+						{
+							title:'三级菜单',
+						},
+						{
+							title:'三级菜单',
+						}
+					]
+				},
+				{
+					title:'二级菜单',
+				}
+			]
+		}
+	];
+	
+	var list = document.getElementById("list");
+
+	function fn(obj){
+		var html =  '<ul>';
+		for(var j = 0; j< obj.length; j++){
+			if(obj[j].child){
+				html +=  '<li><h2><span>+</span>'+obj[j].title+'</h2>';
+			}else{
+				html +=  '<li><h2 style="padding-left:10px;">'+obj[j].title+'</h2>';
+			}
+			if(obj[j].child){
+				html += fn(obj[j].child);
+			}
+			html += '</li>';
+		}
+		html += '</ul>';
+		return html;
+	}
+	list.innerHTML = fn(obj);
+	
+	//获取到页面中所有的h2
+	var all_h2 = list.getElementsByTagName('h2');
+	//循环所有的h2
+	for(var i = 0; i < all_h2.length; i++){
+		var inner = all_h2.innerHTML;
+		all_h2[i].index = i;
+		//给每个h2定义一个开关,
+		all_h2[i].states = true;
+		all_h2[i].onclick = function(){
+			if(!this.nextElementSibling) {
+				alert('没有下一级标题');
+				return;
+			}
+			fnn2( all_h2[this.index] );								//调用函数 
+			if(this.states){										//如果开关为真
+				var spans = this.firstElementChild;					//获取到h2下的span
+				this.nextElementSibling.style.display = 'block';    //开关为真,则显示兄弟级元素
+				spans.innerHTML = '-';								//展开时,前面为-号
+			}else{
+				var spans = this.firstElementChild;					//获取到h2下的span
+				this.nextElementSibling.style.display = 'none';     //开关为假,则隐藏兄弟级元素
+				spans.innerHTML = '+';								//合上时,前面为+号
+			}
+			this.states = !this.states;								//改变开关的状态
+		}
+	}
+	
+	function fnn2(obj){
+		console.log(obj)
+		//获取obj的父级的父级下的所有li
+		var all_li=obj.parentNode.parentNode.querySelectorAll('li');
+		//循环所有的li
+		for(var i = 0; i < all_li.length; i++){
+			if(all_li[i].children.length >= 2){							//当前li下的元素的长度>=2时,说明有下一级标题存在
+				for(var j = 0; j < all_li[i].children.length; j++ ){	//循环所有的元素
+					if(all_li[i]!== obj.parentNode){					//如果传过来的h2的父级不是当前的li
+						all_li[i].firstElementChild.states = true;		//改变h2的开关
+						all_li[i].firstElementChild.firstElementChild.innerHTML = '+'; 
+					}
+					all_li[i].lastElementChild.style.display = "none";	
+				}
+			}
+		}
+	}
+</script>
+</html>
