@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>放大镜</title>
+<style type="text/css">
+p{
+	margin: 0;
+}
+	#box{
+		float: left;
+		width: 300px;
+		height: 200px;
+		border: 2px solid skyblue;
+		position: relative;
+	}
+	#box img{
+		width: 300px;
+		height: 200px;
+	}
+	#mask{
+		width: 100px;
+		height: 100px;
+		background: skyblue;
+		display:none;
+		opacity: .5;
+		position:absolute;
+		top:0;
+		left:0;
+	}
+	#bigBox{
+		float: left;
+		width: 600px;
+		height: 400px;
+		overflow: hidden;
+		margin-left: 20px;
+		border: 2px solid skyblue;
+		position: relative;
+		display:none;
+	}
+	#bigBox img{
+		position:absolute;
+		top:0;
+		left:0;
+	}
+</style>
+</head>
+<body>
+<div id="box">
+	<img src="img/img12.jpg" />
+	<p id="mask"></p>
+</div>
+  <div id="bigBox">
+	<img src="img/img12.jpg" />
+</div> 
+</body>
+<script>
+	var box = document.getElementById("box");
+	var mask = document.getElementById("mask");
+	var bigBox = document.getElementById("bigBox");
+	var Img = bigBox.children[0];
+	
+	//鼠标移入显示遮罩层和大图
+	box.onmouseover=function(){
+		mask.style.display = bigBox.style.display = 'block';
+	};
+	//鼠标移出隐藏遮罩层和大图
+	box.onmouseout=function(){
+		mask.style.display = bigBox.style.display = 'none';
+	};
+
+
+
+
+	box.onmousemove = function(ev){
+		//鼠标移动时，保障鼠标的位置在mask的中心
+		var l = ev.clientX - this.offsetLeft - mask.offsetWidth/2;
+		var t = ev.clientY - this.offsetTop - mask.offsetHeight/2;
+		
+		//处理过界问题
+		if(l<=0){
+			l = 0;
+		}
+		if(l >= box.clientWidth - mask.offsetWidth){
+			l = box.clientWidth - mask.offsetWidth;
+		}
+		if(t <=0){
+			t = 0;
+		}else if(t >= box.clientHeight - mask.offsetHeight){
+			t = box.clientHeight - mask.offsetHeight;
+		}
+		
+		 //现在移动的X轴的百分比 = 左边移动的left值/box的宽减去遮罩层的宽
+		 //现在移动的Y轴的百分比 = 上边移动的top值/box的高减去遮罩层的高
+		var percentX = l/(this.clientWidth - mask.offsetWidth);
+		var percentY = t/(this.clientHeight - mask.offsetHeight);
+
+		
+		//给大图定位
+		Img.style.left = -percentX * ( Img.offsetWidth - bigBox.clientWidth) + 'px';
+		Img.style.top = -percentY * ( Img.offsetHeight - bigBox.clientHeight) + 'px';
+		//给遮罩层定位
+		mask.style.left = l+ 'px';
+		mask.style.top = t+ 'px';
+	}
+
+
+
+</script>
+</html>

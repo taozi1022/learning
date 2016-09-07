@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>斜着走的box</title>
+<style type="text/css">
+html{
+	overflow: hidden;
+}
+	#box{
+		width: 100px;
+		height: 100px;
+		background: skyblue;
+		position: absolute;
+		top: 0;
+		left:0;
+		color: #fff;
+		line-height: 30px;
+	}
+</style>
+</head>
+<body>
+    <div id="box">点击上下左右键来移动我吧!</div>
+</body>
+<script type="text/javascript" src="js/boundary.js"></script>
+<script type="text/javascript">
+//声明一个对象,用来push状态\
+var obj = {};
+//当键盘点击下去的时候,将当前点击的kerCode设置为true状态
+	document.onkeydown = function(ev){
+		obj[ev.keyCode] = true;
+	}
+
+	//当键盘抬起的时候,将当前点击的kerCode设置为false状态
+	document.onkeyup = function(ev){
+		obj[ev.keyCode] = false;
+	}
+
+
+//判断当前点击的键盘对应的状态
+	setInterval(function (){
+		if( obj[39] ){				//右键
+			if(getRect(box).right >= view().W) {
+				box.style.left = view().W - getRect(box).width  + "px";
+				return;
+			}
+			box.style.left = box.offsetLeft +5 + "px";
+
+		}
+		if( obj[40] ){				//下键
+			if(getRect(box).bottom >= view().H) {
+				box.style.top = view().H - getRect(box).height  + "px";
+				// obj[40] = false;
+				return;
+			}
+			box.style.top = box.offsetTop +5 + "px";
+
+		}
+		if( obj[37] ){				//左键
+			if(box.offsetLeft < 1) {
+				// obj[37] = false;
+				box.style.left = 0 + "px";
+				return;
+			}
+			box.style.left = box.offsetLeft - 5 + "px";
+		}
+		if( obj[38] ){				//上键
+			if(box.offsetTop < 1) {
+				// obj[37] = false;
+				box.style.top = 0 + "px";
+				return;
+			}
+			box.style.top = box.offsetTop - 5 + "px";
+		}
+
+
+		if(obj[39] && obj[37]){
+			obj[39] = obj[37] = false;
+			alert("不能同时按住左右键");
+			return;
+		}
+		if(obj[38] && obj[40]){
+			obj[38] = obj[40] = false;
+			alert("不能同时按住上下键");
+			return;
+		}
+	},16)
+</script>
+</html>
