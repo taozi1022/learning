@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>选择城市</title>
+</head>
+<body>
+	<select id="se">
+		<option>请选择</option>
+	</select>
+	<select id="se2">
+		<option>请选择</option>
+	</select>
+	<select id="se3">
+		<option>请选择</option>
+	</select>
+</body>
+<script src="js/citys.js"></script>
+<script>
+	
+	function renderData(data){
+		var str = '';
+		for( var i = 0; i < data.length; i++ ){
+			str += '<option value="'+data[i].name+'">'+data[i].name+'</option>'
+		}
+		return str;
+	}
+	
+	se.innerHTML = renderData(data);
+	
+	
+	var nextSub = null;
+	//当se发生改变时,让市也跟着改变
+	se.onchange = function(){
+		//循环data,判断data[i].name与当前value是否相等
+		for(var i = 0; i < data.length; i++){
+			if(data[i].name == this.value){		//相等的话,就把它对应的sub给了nextSub,去渲染下一级下拉菜单
+				nextSub = data[i].sub;
+			}
+		}
+		//存在的话再去渲染页面,不存在就算了
+		if(nextSub){
+			se2.innerHTML = renderData(nextSub);
+		}
+		
+	}
+	
+	//当se2发生改变时,让县也跟着改变
+	se2.onchange = function(){
+		var citySub = null;
+		for(var i = 0; i < nextSub.length; i++){
+			if(nextSub[i].name == this.value){		//相等的话,就把它对应的sub给了nextSub,去渲染下一级下拉菜单
+				citySub = nextSub[i].sub;
+			}
+		}
+		//存在的话再去渲染页面,不存在就算了
+		if(citySub){
+			se3.innerHTML = renderData(citySub);
+		}
+		
+	}
+	
+	
+	
+</script>
+</html>

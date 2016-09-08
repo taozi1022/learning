@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<input type="text" id="message" />
+	<ul id="list">
+		<li>123</li>
+	</ul>
+</body>
+<script>
+	
+	//////////点击回车进行留言///////
+	/*message.onkeydown = function(ev){
+		if(ev.keyCode === 13){
+			var newLI = document.createElement('li');
+			newLI.innerHTML = message.value;
+			list.appendChild(newLI);
+			message.value = '';
+		}
+	}*/
+	
+	/////按ctrl和回车发送留言
+	message.onkeydown = function(ev){
+		if(ev.keyCode === 13 && ev.ctrlKey){
+			var newLI = document.createElement('li');
+			newLI.innerHTML = message.value;
+			list.appendChild(newLI);
+			message.value = '';
+		}
+	}
+	
+</script>
+</html>
