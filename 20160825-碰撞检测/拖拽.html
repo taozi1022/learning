@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style>
+	#box{
+		width: 100px;
+		height:100px;
+		background:red;
+		position: absolute;
+		top:0;
+		left:100px;
+	}
+</style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+<script>
+	var  box = document.getElementById("box");
+	var W = document.documentElement.clientWidth;
+	var H = document.documentElement.clientHeight;
+
+
+
+	//当鼠标在box上down的时候,计算鼠标的位置
+	box.onmousedown = function(ev){
+		//鼠标点击到box边上的距离
+		var disX = ev.clientX - box.offsetLeft;
+		var disY = ev.clientY - box.offsetTop;
+		
+
+		//点击box进行move的时候,
+		document.onmousemove = function(ev){
+			//当前鼠标点击的减去鼠标点击到box边上的距离就是box在move过程中的left和top值
+			var l = ev.clientX - disX;
+			var t = ev.clientY - disY;
+			//过界
+			if(l < 0) l = 0;
+			if( t < 0) t = 0;
+
+			if(l >= W - box.offsetWidth) l = W - box.offsetWidth +'px';
+			if(t >= H - box.offsetHeight) t = H - box.offsetHeight +'px';
+
+			//box定位
+			box.style.left = l + 'px';
+			box.style.top = t + 'px';
+		}
+		document.onmouseup = function(ev){
+			document.onmousemove = null;
+			document.onmouseup = null;
+		}
+	}
+
+
+
+
+</script>
+</html>
