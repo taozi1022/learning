@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>照片墙</title>
+	<style>
+		body{
+			background:url(img/2fc.jpg) no-repeat;
+			background-size: 1366px auto;
+		}
+		img{
+			vertical-align: top;
+			width: 180px;
+			height: 120px;
+			border-radius: 27px;
+
+
+		}
+		#list{
+			width: 840px;
+			height: 432px;
+			padding: 30px;
+			margin: 0 auto;
+			list-style: none;
+			border:6px double #07f6f2;
+			border-radius: 20px;
+			-webkit-user-select: none;
+		}
+		div{
+			width: 150px;
+			margin: 10px auto;
+		}
+		li{
+			width: 180px;
+			border: 3px  ridge #e80ac2;
+			margin: 10px;
+			display: inline-block;
+			border-radius: 30px;
+		}
+		button{
+			width: 100px;
+			line-height: 30px;
+			padding: 0;
+			border:none;
+			background:#48dca2;
+			color: blue;
+			font-size: 20px;
+			border-radius: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="btn">
+		<button>随机</button>
+	</div>
+	<ul id="list">
+		<!-- <li>
+			<img src="img/2.jpg"/>
+		</li>
+		<li>
+			<img src="img/3.jpg"/>
+		</li>
+		<li>
+			<img src="img/7.jpg"/>
+		</li>
+		<li>
+			<img src="img/13.jpg"/>
+		</li>
+		<li>
+			<img src="img/14.jpg"/>
+		</li>
+		<li>
+			<img src="img/18.jpg"/>
+		</li>
+		<li>
+			<img src="img/21.jpg"/>
+		</li>
+		<li>
+			<img src="img/25.jpg"/>
+		</li> -->
+	</ul>
+</body>
+<script type="text/javascript" src="js/tools.js" ></script>
+<script type="text/javascript" src="js/Movement.js"></script>
+<script>
+	//存图片的数组
+	var list = document.getElementById("list");
+	var btn = $('button',$('#btn'))[0];
+	var lis = $('li',list);
+	var imgs = ['3','7','2','13','21','25','2a','97','14','238','18','bb'];
+
+	//自动生成页面结构
+	var html = '';
+	for(var i = 0;i < imgs.length; i++){
+		html += '<li><img src="img/'+imgs[i]+'.jpg"/></li>';
+	}
+	list.innerHTML = html;
+	
+
+	
+//获取到页面中所有的li的left值和top值
+	var arr = [];
+	for(var i = 0; i < lis.length; i++){
+		arr.push(
+			{
+				left:lis[i].offsetLeft,
+				top:lis[i].offsetTop
+			}
+		)
+	}
+//循环所有的allLi,给所有的div添加定位
+	for(var i = 0; i < lis.length; i++){
+		lis[i].style.position = 'absolute';		//定位设为absolute
+		lis[i].style.left = arr[i].left + 'px';	//left值为数组中的j值
+		lis[i].style.top = arr[i].top + 'px';	//top值为数组中的j值
+		
+		lis[i].style.margin = 0;					//清掉所有的margin值
+	}
+//随机排序
+	btn.addEventListener("click",function(){
+		//解决狂点问题
+		for(var i = 0; i < lis.length; i++){
+			if(lis[i].timer) return;
+		}
+		//给arr数组中的left值和top值对应的对象随机打乱顺序
+		arr.sort(function (){
+			return  Math.random() - 0.5
+		});
+		//给每一个加运动
+		for(var i = 0; i < lis.length; i++){
+			lis[i].style.transform = '';
+			Movement(lis[i],{left:arr[i].left,top:arr[i].top},500,"linear")
+		}
+	},false)
+	//获取到元素本身的大小以及相对于视口的位置
+	function fn(obj){
+		return obj.getBoundingClientRect();
+	}
+
+	function fun(obj,obj1){
+		//获取obj的上下左右
+		var objL = fn(obj).left;
+		var objR = fn(obj).right;
+		var objT = fn(obj).top;
+		var objB = fn(obj).bottom;
+		//获取obj1的上下左右
+		var obj1L = fn(obj1).left;
+		var obj1R = fn(obj1).right;
+		var obj1T = fn(obj1).top;
+		var obj1B = fn(obj1).bottom;
+		//判断没有碰上的区域
+		if(objR < obj1L || objL > obj1R || objB < obj1T || objT > obj1B ){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	console.log(fn(list))
+
+	var n = 0;
+	//循环页面中所有的li,
+	for(var i = 0; i < lis.length; i++){
+		lis[i].index = i;	//记录当前点击的是哪一个
+		lis[i].addEventListener("mousedown",function(ev){
+			//获取到鼠标距离元素边界的距离
+			var disX = ev.clientX - this.offsetLeft;
+			var disY = ev.clientY - this.offsetTop;
+
+			this.style.zIndex = "10";
+
+
+			//记录当前点击元素的原坐标值
+			var liLeft = this.offsetLeft;
+			var liTop = this.offsetTop;
+
+
+			//把当前移动的元素碰到的元素都放在数组中
+			var arr2 = [];
+			var num = +Infinity;
+			var obj = null;
+
+			n = this.index;		//将当前的index赋给变量n
+
+			//移动某个元素的时候,,冒泡到它的父级元素身上,提升性能
+			document.onmousemove = function(ev){
+
+				for(var j = 0; j < lis.length; j++){
+					if(lis[j].timer){
+						document.onmousemove = null;
+						document.onmouseup = null;
+					}
+				}
+
+				var X = ev.clientX - disX;
+				var Y = ev.clientY- disY;
+				//判断边界
+				if(X < fn(list).left) X = fn(list).left;
+				if(Y < fn(list).top) Y = fn(list).top;
+				if(X > fn(list).right - lis[n].offsetWidth) X = fn(list).right - lis[n].offsetWidth;
+				if(Y > fn(list).bottom - lis[n].offsetHeight) Y = fn(list).bottom - lis[n].offsetHeight;
+
+				//给当前移动的那个元素定位
+				lis[n].style.left = X + "px";
+				lis[n].style.top = Y + "px";
+
+				arr2.length = 0;
+				num = +Infinity;
+				obj = null;
+				for(var l = 0; l < lis.length; l++){
+					fun( lis[n], lis[l] )
+					//如果函数返回值为true
+					if(fun( lis[n], lis[l] )){
+						//把当前点击的元素排除掉
+						if( lis[l] !== lis[n] ){
+							arr2.push(lis[l]);		//将其它碰撞到的元素push到arr2数组中
+						}
+					}
+					//找到拖动元素的中心点
+					var circleX = fn(lis[n]).left + lis[l].offsetWidth/2;
+					var circleY = fn(lis[n]).top + lis[l].offsetHeight/2;	
+				}
+
+				//循环被碰撞元素的数组,判断哪个元素里拖拽原素更近
+				for(var j = 0; j < arr2.length; j++ ){
+					//找到被碰撞元素的中心点
+					var circle1X = fn( arr2[j] ).left + arr2[j].offsetWidth/2;
+					var circle1Y = fn( arr2[j] ).top + arr2[j].offsetHeight/2;
+					//计算次幂
+					var siteX = Math.pow(Math.abs(circleX - circle1X),2);
+					var siteY = Math.pow(Math.abs(circleY - circle1Y),2);
+					var s = siteX + siteY;
+
+					if(num > s){
+						num = s;
+						obj = arr2[j];		
+					}
+
+				}
+			};
+
+
+
+
+			document.onmouseup = function(){
+
+				document.onmousemove = null;
+				document.onmouseup = null;
+
+				if(obj){
+					//记录被碰撞元素的坐标
+					var objLeft = obj.offsetLeft;
+					var objTop = obj.offsetTop;
+					//运动
+					Movement(obj,{left:liLeft,top:liTop},500,"linear");
+					Movement(lis[n],{left:objLeft,top:objTop},500,"linear",function(){
+						for(var j = 0; j < lis.length; j++){
+							lis[j].style.zIndex = "1";
+						}
+					})
+				}else{
+					//运动
+					Movement(lis[n],{left:liLeft,top:liTop},500,"linear",function(){
+						for(var j = 0; j < lis.length; j++){
+							lis[j].style.zIndex = "1";
+						}
+					})
+				}
+			}
+			//阻止浏览器的默认行为
+			ev.preventDefault();
+		},false)
+
+	}
+</script>
+</html>
