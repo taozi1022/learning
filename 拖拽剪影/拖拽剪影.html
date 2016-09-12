@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽剪影</title>
+    <style>
+        .box{
+            width:100px;
+            height: 100px;
+            border: 1px solid #000;
+            background: greenyellow;
+            margin: 10px;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+<div class="box"></div>
+<div class="box"></div>
+<div class="box"></div>
+</body>
+<script>
+
+    var boxs = document.getElementsByClassName("box");
+/*------------布局转换------------*/
+    var arr = [];       //存放每一个div的left值和top值
+
+    for(var i = 0; i < boxs.length; i++){
+        arr.push({
+            left:boxs[i].offsetLeft,
+            top:boxs[i].offsetTop
+        })
+    }
+
+    for(var i = 0; i < boxs.length; i++){
+        boxs[i].style.position = "absolute";
+        boxs[i].style.left = arr[i].left + "px";
+        boxs[i].style.top = arr[i].top + "px";
+        boxs[i].style.margin = 0;
+    }
+
+
+/*----------------拖动元素-----------------*/
+    for(var i = 0; i < boxs.length; i++){
+        move(boxs[i]);
+    }
+
+    var disX = 0;
+    var disY = 0;
+    var W = document.documentElement.clientWidth;
+    var H = document.documentElement.clientHeight;
+
+    var l = 0;
+    var t = 0;
+    function move(obj) {
+    obj.onmousedown = function (ev) {
+        disX = ev.clientX - this.offsetLeft;
+        disY = ev.clientY - this.offsetTop;
+        var box2 = ev.target.cloneNode(true);
+        document.body.appendChild(box2);
+        box2.style.background = "pink";
+
+
+        document.onmousemove = function(ev){
+            //获取到box的left值,和top值
+            l = ev.clientX - disX;
+            t = ev.clientY - disY;
+            //左,上
+            if(l < 0) l = 0;		//有磁铁的效果,小于50的时候,变成0
+            if(t < 0) t = 0;
+            //右下
+            if (l > W - obj.offsetWidth ) l = W - obj.offsetWidth ;
+            if (t > H - obj.offsetHeight ) t = H - obj.offsetHeight ;
+
+            box2.style.left = l +'px';
+            box2.style.top = t + 'px';
+
+        }
+
+        document.onmouseup = function(){
+            /////?//判断两个元素是否相撞
+            if(duang(obj,box2)){    //撞到了,还是原来的left值和top值
+                obj.style.left = obj.offsetLeft +'px';
+                obj.style.top = obj.offsetTop + 'px';
+            }else{                  //没撞上,重新给box赋left和top值
+                obj.style.left = l +'px';
+                obj.style.top = t + 'px';
+            }
+
+            document.body.removeChild(box2);
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+    }
+}
+
+
+function Rect(obj){
+        return obj.getBoundingClientRect();
+    }
+//碰撞的函数
+function duang(obj1,obj2){
+    var obj1Size = Rect(obj1);
+    var obj2Size = Rect(obj2);
+
+    var boxL = obj1Size.left;
+    var boxR = obj1Size.right;
+    var boxT = obj1Size.top;
+    var boxB = obj1Size.bottom;
+
+    var box2L = obj2Size.left;
+    var box2R = obj2Size.right;
+    var box2T = obj2Size.top;
+    var box2B = obj2Size.bottom;
+
+    if(boxR < box2L || boxL > box2R ||　boxB　< box2T || boxT > box2B ){
+        return false;
+    }else{
+        return true;
+    }
+}
+</script>
+</html>
