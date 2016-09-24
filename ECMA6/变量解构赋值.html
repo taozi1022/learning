@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+</head>
+<body>
+    <script>
+    	
+    	var  arr = ['lao','wang'];
+
+    	/*var a = arr[0];
+    	var b = arr[1];
+
+    	console.log(a,b);	//lao wang
+*/
+    	/*var [a,b] = arr;
+
+    	console.log(a,b);	//lao wang   按照下标一一赋值*/
+
+
+	var obj = {
+		laowang:{
+			name:'laowang'
+		},
+		xiaoqiang:{
+			name:'xiaoqiang'
+		}
+	}
+
+
+	/*var {laowang,xiaoqiang} = obj;
+	console.log(laowang,xiaoqiang);	*/		//按照key值一一赋值
+
+
+
+	var arr1 = [
+		{
+			a:1
+		},
+		{
+			b:1
+		}
+	]
+
+
+	var [{a},{b}] = arr1;
+	console.log({a},{b});//一一赋值
+
+
+
+    </script>
+</body>
+</html>
